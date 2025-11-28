@@ -14,40 +14,23 @@ import useFetch from "@/services/useFetch";
 import { fetchMovies } from "@/services/api";
 import MovieCard from "@/components/MovieCard"; // Assuming this was missing
 import mixpanel from "../Mixpanel";
-// import {
-//   MPSessionReplay,
-//   MPSessionReplayConfig,
-//   MPSessionReplayMask,
-// } from "@mixpanel/react-native-session-replay";
 
-// // Initialize session replay
-// const config = new MPSessionReplayConfig({
-//   wifiOnly: false,
-//   recordingSessionsPercent: 100,
-//   autoStartRecording: true,
-//   autoMaskedViews: [MPSessionReplayMask.Image, MPSessionReplayMask.Text],
-//   flushInterval: 5,
-//   enableLogging: true,
-// });
+let distinctId = null; // Declare distinctId outside the IIFE
 
-// (async () => {
-//   try {
-//     await MPSessionReplay.initialize(
-//       "b9fb34a1635124f6098b5248a23f41f0",
-//       "965018066",
-//       config
-//     );
-//     // You typically only want to start recording, not immediately stop it
-//     // await MPSessionReplay.startRecording();
-//     // await MPSessionReplay.stopRecording(); // Remove this unless for testing
+(async () => {
+  try {
+    distinctId = await mixpanel.getDistinctId(); // Assign the result
+    console.log("wtf", distinctId);
+  } catch (error) {
+    // This will catch the previous "Native module not found" or C++ errors
+    console.error("Error fetching Mixpanel Distinct ID:", error);
+  }
+})();
 
-//     // Check recording status (optional)
-//     const recording = await MPSessionReplay.isRecording();
-//     console.log("Mixpanel Session Replay recording status:", recording);
-//   } catch (error) {
-//     console.error("Initialization error:", error);
-//   }
-// })();
+// WARNING: distinctId will be null here until the async block finishes.
+// It is better to move the track event *inside* the async block if it relies on distinctId.
+
+// Your functional component starts here
 
 mixpanel.track("some_event", {
   some_property: "some_value",

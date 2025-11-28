@@ -13,28 +13,6 @@ import { useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
 import { fetchMovies } from "@/services/api";
 import MovieCard from "@/components/MovieCard"; // Assuming this was missing
-import mixpanel from "../Mixpanel";
-
-let distinctId = null; // Declare distinctId outside the IIFE
-
-(async () => {
-  try {
-    distinctId = await mixpanel.getDistinctId(); // Assign the result
-    console.log("wtf", distinctId);
-  } catch (error) {
-    // This will catch the previous "Native module not found" or C++ errors
-    console.error("Error fetching Mixpanel Distinct ID:", error);
-  }
-})();
-
-// WARNING: distinctId will be null here until the async block finishes.
-// It is better to move the track event *inside* the async block if it relies on distinctId.
-
-// Your functional component starts here
-
-mixpanel.track("some_event", {
-  some_property: "some_value",
-});
 
 export default function Index() {
   const router = useRouter();
